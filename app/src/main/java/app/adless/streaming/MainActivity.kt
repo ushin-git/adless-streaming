@@ -1059,7 +1059,7 @@ private fun AboutDialog(onDismiss: () -> Unit) {
               context.startActivity(
                 Intent(
                   Intent.ACTION_VIEW,
-                  "https://github.com/onmacgit/adless-streaming/blob/main/docs/privacy.md".toUri(),
+                  "https://github.com/ushin-git/adless-streaming/blob/main/docs/privacy.md".toUri(),
                 )
               )
             },

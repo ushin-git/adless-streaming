@@ -16,4 +16,4 @@ The app has no crash-reporting or analytics SDK. Android and device vendors may 
 
 ## Contact
 
-For privacy questions, open an issue at [github.com/onmacgit/adless-streaming](https://github.com/onmacgit/adless-streaming/issues). Do not include private listening history or other personal data in a public issue.
+For privacy questions, open an issue at [github.com/ushin-git/adless-streaming](https://github.com/ushin-git/adless-streaming/issues). Do not include private listening history or other personal data in a public issue.

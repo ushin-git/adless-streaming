@@ -254,7 +254,7 @@ class WikimediaCommonsSource : MusicSource {
     val pages =
       HttpJson.get(
           url,
-          "AdlessStreaming/0.1 (Android; https://github.com/onmacgit/adless-streaming)",
+          "AdlessStreaming/0.1 (Android; https://github.com/ushin-git/adless-streaming)",
         )
         .optJSONObject("query")
         ?.optJSONObject("pages") ?: return emptyList()
