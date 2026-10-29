@@ -32,7 +32,7 @@
     <h1>Music, on your terms.</h1>
     <p class="lead">An independent Android music player with no ads, no trackers, and no listener account.</p>
     <a class="button" id="download" href="#releases" aria-disabled="true">No release available yet</a>
-    <div class="note" id="status" role="status">The app is in early development. Download links will appear here after a tested APK is published as a GitHub Release.</div>
+    <div class="note" id="status" role="status">The app is in early development. Browse GitHub Releases for the APK and build notes.</div>
     <nav class="links" aria-label="Project links">
       <a id="source" href="https://github.com/" rel="noopener">Source code</a>
       <a href="../README.md">Project details</a>
@@ -45,10 +45,10 @@
     const owner = window.ADLESS_GITHUB_OWNER || (location.hostname.endsWith('.github.io') ? location.hostname.split('.')[0] : '');
     if (owner) {
       const repository = `https://github.com/${encodeURIComponent(owner)}/adless-streaming`;
-      const releases = `${repository}/releases/latest`;
+      const releases = `${repository}/releases`;
       const button = document.getElementById('download');
       button.href = releases;
-      button.textContent = 'View latest release';
+      button.textContent = 'View APK releases';
       button.removeAttribute('aria-disabled');
       document.getElementById('source').href = repository;
     }

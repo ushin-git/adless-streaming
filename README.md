@@ -55,7 +55,7 @@ Screenshots will be added after an Android build can be run.
 
 ## Download page
 
-The standalone page is [docs/download.html](docs/download.html). It links to the latest GitHub Release when hosted at `USERNAME.github.io`; no APK is available until a tested build is published as a release.
+The standalone page is [docs/download.html](docs/download.html). It links to the GitHub Releases page when hosted at `USERNAME.github.io`.
 
 ## License
 
