@@ -12,27 +12,27 @@ import app.adless.streaming.data.source.WikimediaCommonsSource
 import app.adless.streaming.playback.PlaybackController
 
 class AdlessApplication : Application() {
-    lateinit var container: AppContainer
-        private set
+  lateinit var container: AppContainer
+    private set
 
-    override fun onCreate() {
-        super.onCreate()
-        container = AppContainer(this)
-    }
+  override fun onCreate() {
+    super.onCreate()
+    container = AppContainer(this)
+  }
 }
 
 class AppContainer(application: Application) {
-    val sourceRegistry = SourceRegistry(
-        listOf(
-            LocalAudioSource(application),
-            JamendoSource(),
-            AudiusSource(),
-            InternetArchiveSource(),
-            WikimediaCommonsSource(),
-        ),
+  val sourceRegistry =
+    SourceRegistry(
+      listOf(
+        LocalAudioSource(application),
+        JamendoSource(),
+        AudiusSource(),
+        InternetArchiveSource(),
+        WikimediaCommonsSource(),
+      )
     )
-    val settingsStore = LocalSettingsStore(application)
-    val musicLibraryStore = MusicLibraryStore(application)
-    val playbackController = PlaybackController(application)
+  val settingsStore = LocalSettingsStore(application)
+  val musicLibraryStore = MusicLibraryStore(application)
+  val playbackController = PlaybackController(application)
 }
-
