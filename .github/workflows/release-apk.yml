@@ -31,7 +31,7 @@ jobs:
           ADLESS_RELEASE_KEY_ALIAS: ${{ secrets.ADLESS_RELEASE_KEY_ALIAS }}
           ADLESS_RELEASE_KEY_PASSWORD: ${{ secrets.ADLESS_RELEASE_KEY_PASSWORD }}
         run: ./gradlew lintRelease assembleRelease
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: adless-streaming-release-apk
           path: app/build/outputs/apk/release/app-release.apk
