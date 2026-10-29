@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111714">
+  <meta name="description" content="Download Adless Streaming, an original ad-free Android music player.">
+  <title>Download Adless Streaming</title>
+  <style>
+    :root { color-scheme: dark; --bg: #111714; --surface: #1a211d; --text: #f4f5ef; --muted: #b4c0b8; --mint: #9ce6c1; --line: #35443b; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; color: var(--text); background: radial-gradient(ellipse at 50% 0%, #234738 0, var(--bg) 56%); font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { width: min(100%, 660px); padding: clamp(28px, 7vw, 58px); border: 1px solid var(--line); border-radius: 30px; background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: 0 28px 90px #0006; }
+    .brand { display: flex; align-items: center; gap: 12px; color: var(--mint); font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .glyph { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 14px; color: #08271c; background: var(--mint); font-size: 22px; letter-spacing: 0; }
+    h1 { margin: 36px 0 12px; font-size: clamp(36px, 8vw, 58px); line-height: 1.02; letter-spacing: -.045em; }
+    p { color: var(--muted); }
+    .lead { max-width: 48ch; font-size: 18px; }
+    .button { display: inline-flex; min-height: 52px; align-items: center; justify-content: center; margin-top: 18px; padding: 0 22px; border-radius: 999px; color: #08271c; background: var(--mint); font-weight: 800; text-decoration: none; }
+    .button:focus-visible, a:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+    .button[aria-disabled="true"] { opacity: .55; }
+    .note { margin-top: 30px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; font-size: 14px; }
+    .links { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 26px; font-size: 14px; }
+    a { color: var(--mint); }
+    footer { margin-top: 34px; color: var(--muted); font-size: 12px; }
+    @media (prefers-reduced-motion: no-preference) { main { animation: appear .5s ease-out both; } @keyframes appear { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand"><span class="glyph" aria-hidden="true">♫</span> Adless Streaming</div>
+    <h1>Music, on your terms.</h1>
+    <p class="lead">An independent Android music player with no ads, no trackers, and no listener account.</p>
+    <a class="button" id="download" href="#releases" aria-disabled="true">No release available yet</a>
+    <div class="note" id="status" role="status">The app is in early development. Download links will appear here after a tested APK is published as a GitHub Release.</div>
+    <nav class="links" aria-label="Project links">
+      <a id="source" href="https://github.com/" rel="noopener">Source code</a>
+      <a href="../README.md">Project details</a>
+    </nav>
+    <footer>Free and open source · MIT · Android</footer>
+  </main>
+  <script>
+    // On GitHub Pages, infer the account from the standard username.github.io host.
+    // A custom domain can set window.ADLESS_GITHUB_OWNER before this script runs.
+    const owner = window.ADLESS_GITHUB_OWNER || (location.hostname.endsWith('.github.io') ? location.hostname.split('.')[0] : '');
+    if (owner) {
+      const repository = `https://github.com/${encodeURIComponent(owner)}/adless-streaming`;
+      const releases = `${repository}/releases/latest`;
+      const button = document.getElementById('download');
+      button.href = releases;
+      button.textContent = 'View latest release';
+      button.removeAttribute('aria-disabled');
+      document.getElementById('source').href = repository;
+    }
+  </script>
+</body>
+</html>
