@@ -2,6 +2,7 @@ package app.adless.streaming.data
 
 import androidx.core.net.toUri
 import java.net.HttpURLConnection
+import java.net.URI
 import java.net.URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -36,10 +37,18 @@ internal object HttpJson {
       .toString()
 
   fun licenseAllowed(url: String?): Boolean {
-    val value = url?.lowercase().orEmpty()
-    return value.contains("creativecommons.org/licenses/by/") ||
-      value.contains("creativecommons.org/licenses/by-sa/") ||
-      value.contains("creativecommons.org/publicdomain/zero/") ||
-      value.contains("creativecommons.org/publicdomain/mark/")
+    val uri = url?.let { runCatching { URI(it) }.getOrNull() } ?: return false
+    if (
+      uri.scheme?.lowercase() !in setOf("https", "http") ||
+        uri.host?.lowercase() != "creativecommons.org"
+    ) {
+      return false
+    }
+    val path = uri.path.orEmpty().trim('/').split('/').map(String::lowercase)
+    if (path.size != 3) return false
+    val version = path[2]
+    if (!version.matches(Regex("[1-4](?:\\.[0-9])?"))) return false
+    return (path[0] == "licenses" && path[1] in setOf("by", "by-sa")) ||
+      (path[0] == "publicdomain" && path[1] in setOf("zero", "mark"))
   }
 }

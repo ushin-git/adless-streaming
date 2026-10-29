@@ -72,11 +72,30 @@ class ProviderParsingTest {
         """
         )
       )
+    val gated =
+      parseAudiusTrack(
+        JSONObject(
+          """
+            {"id":"gated","title":"Gated","is_stream_gated":true}
+        """
+        )
+      )
+    val unsupported =
+      parseAudiusTrack(
+        JSONObject(
+          """
+            {"id":"unknown","title":"Unknown","license":"Some custom license"}
+        """
+        )
+      )
 
     assertNotNull(allowed)
     assertEquals("https://audius.co/a-creator/open-sky", allowed?.sourcePageUrl)
+    assertEquals("https://audius.org/open-music-license.pdf", allowed?.licenseUrl)
     assertNull(restricted)
     assertNull(reserved)
+    assertNull(gated)
+    assertNull(unsupported)
   }
 
   @Test
@@ -84,5 +103,13 @@ class ProviderParsingTest {
     assertEquals(true, HttpJson.licenseAllowed("https://creativecommons.org/licenses/by/4.0/"))
     assertEquals(true, HttpJson.licenseAllowed("https://creativecommons.org/licenses/by-sa/4.0/"))
     assertEquals(false, HttpJson.licenseAllowed("https://creativecommons.org/licenses/by-nc/4.0/"))
+    assertEquals(
+      false,
+      HttpJson.licenseAllowed("https://evil.example/creativecommons.org/licenses/by/4.0/"),
+    )
+    assertEquals(
+      false,
+      HttpJson.licenseAllowed("https://creativecommons.org.evil.example/licenses/by/4.0/"),
+    )
   }
 }

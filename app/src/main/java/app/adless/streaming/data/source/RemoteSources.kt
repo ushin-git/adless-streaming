@@ -6,6 +6,7 @@ import app.adless.streaming.BuildConfig
 import app.adless.streaming.data.HttpJson
 import app.adless.streaming.domain.MusicSource
 import app.adless.streaming.domain.MusicTrack
+import java.net.URI
 import org.json.JSONObject
 
 private fun JSONObject.string(key: String): String? =
@@ -32,10 +33,16 @@ internal fun parseJamendoTrack(item: JSONObject): MusicTrack? {
 internal fun parseAudiusTrack(item: JSONObject): MusicTrack? {
   val id = item.string("id") ?: return null
   val title = item.string("title") ?: return null
+  if (
+    !item.optBoolean("is_streamable", true) ||
+      item.optBoolean("is_stream_gated", false) ||
+      item.optBoolean("is_unlisted", false) ||
+      item.optBoolean("is_delete", false)
+  )
+    return null
   val user = item.optJSONObject("user")
   val licenseUrl = item.string("license_url")
   val licenseName = item.string("license")
-  if (licenseUrl != null && !HttpJson.licenseAllowed(licenseUrl)) return null
   val normalizedLicense = licenseName?.lowercase()?.replace('-', ' ').orEmpty()
   val restrictedTerms =
     listOf(
@@ -47,6 +54,18 @@ internal fun parseAudiusTrack(item: JSONObject): MusicTrack? {
       "all rights reserved",
     )
   if (restrictedTerms.any { normalizedLicense.contains(it) }) return null
+  val acceptedLicenseUrl =
+    when {
+      licenseUrl == null && licenseName == null -> "https://audius.org/open-music-license.pdf"
+      licenseUrl != null && HttpJson.licenseAllowed(licenseUrl) -> licenseUrl
+      licenseUrl != null && isAudiusOpenMusicLicense(licenseUrl) -> licenseUrl
+      licenseUrl == null && normalizedLicense in setOf("cc by", "cc by sa") ->
+        if (normalizedLicense == "cc by") "https://creativecommons.org/licenses/by/4.0/"
+        else "https://creativecommons.org/licenses/by-sa/4.0/"
+      licenseUrl == null && normalizedLicense.contains("open music license") ->
+        "https://audius.org/open-music-license.pdf"
+      else -> return null
+    }
   return MusicTrack(
     id = id,
     title = title,
@@ -54,9 +73,17 @@ internal fun parseAudiusTrack(item: JSONObject): MusicTrack? {
     artworkUrl = item.optJSONObject("artwork")?.string("480x480"),
     sourceId = "audius",
     sourcePageUrl = item.string("permalink")?.let { "https://audius.co$it" } ?: "https://audius.co",
-    licenseName = licenseName ?: licenseUrl?.substringAfterLast('/'),
-    licenseUrl = licenseUrl,
+    licenseName =
+      licenseName ?: if (licenseUrl == null) "Audius Open Music License" else "Creative Commons",
+    licenseUrl = acceptedLicenseUrl,
   )
+}
+
+private fun isAudiusOpenMusicLicense(url: String): Boolean {
+  val uri = runCatching { URI(url) }.getOrNull() ?: return false
+  return uri.scheme?.lowercase() == "https" &&
+    uri.host?.lowercase() == "audius.org" &&
+    uri.path == "/open-music-license.pdf"
 }
 
 class JamendoSource(private val clientId: String = BuildConfig.JAMENDO_CLIENT_ID) : MusicSource {
@@ -224,7 +251,10 @@ class WikimediaCommonsSource : MusicSource {
         ),
       )
     val pages =
-      HttpJson.get(url, "AdlessStreaming/0.1 (Android; contact: project README)")
+      HttpJson.get(
+          url,
+          "AdlessStreaming/0.1 (Android; https://github.com/onmacgit/adless-streaming)",
+        )
         .optJSONObject("query")
         ?.optJSONObject("pages") ?: return emptyList()
     val result = mutableListOf<MusicTrack>()

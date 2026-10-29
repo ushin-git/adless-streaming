@@ -12,7 +12,7 @@ An original Android music player by Tanishq. Search public catalogs or play loca
 - On-device likes, recent listening history, user playlists, and saved source/theme settings.
 - No ads, trackers, analytics, or listener accounts are included.
 
-Offline downloads, synced lyrics, sleep timer, equalizer, playback speed, adaptive artwork colors, and automated UI/accessibility verification are planned follow-up work. Jamendo offline downloads are intentionally disabled under its API terms. Online playback is not available for tracks with unclear rights.
+This is still an alpha build, not a production release. Offline downloads, synced lyrics, sleep timer, equalizer, playback speed, adaptive artwork colors, and automated UI/accessibility verification remain unimplemented. Jamendo offline downloads are intentionally disabled under its API terms. Online playback is not available for tracks with unclear rights. A production rollout also needs a maintainer-controlled signing key, release signing secrets, and real-device playback/accessibility checks.
 
 ## Sources and rights
 
@@ -34,6 +34,8 @@ Requirements: JDK 17 or later and Android SDK Platform 36. The Gradle wrapper pi
 ## Production signing
 
 Release builds use R8 and resource shrinking and require a signing keystore. Provide `ADLESS_RELEASE_KEYSTORE_FILE`, `ADLESS_RELEASE_STORE_PASSWORD`, `ADLESS_RELEASE_KEY_ALIAS`, and `ADLESS_RELEASE_KEY_PASSWORD` in the build environment, then run `./gradlew :app:assembleRelease`. Release builds fail closed when these values are missing. Never commit the keystore or passwords. For GitHub Actions, add repository secrets named `ADLESS_RELEASE_KEYSTORE_BASE64`, `ADLESS_RELEASE_STORE_PASSWORD`, `ADLESS_RELEASE_KEY_ALIAS`, and `ADLESS_RELEASE_KEY_PASSWORD`, then run the **Signed Android APK** workflow. It publishes the APK as a workflow artifact and does not create a GitHub release. Back up the keystore securely; losing it prevents signed in-place updates. The currently published alpha APK is debug-signed; do not treat it as a production update key.
+
+GitHub Actions pins third-party actions to immutable commit SHAs; Dependabot proposes weekly updates for workflow actions and Gradle dependencies. Review and merge those updates to keep the pinned build chain maintained.
 
 To enable Jamendo, create a developer application and place the client ID in ignored `local.properties`:
 
