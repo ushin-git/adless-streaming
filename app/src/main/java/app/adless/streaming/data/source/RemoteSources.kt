@@ -59,9 +59,10 @@ internal fun parseAudiusTrack(item: JSONObject): MusicTrack? {
       licenseUrl == null && licenseName == null -> "https://audius.org/open-music-license.pdf"
       licenseUrl != null && HttpJson.licenseAllowed(licenseUrl) -> licenseUrl
       licenseUrl != null && isAudiusOpenMusicLicense(licenseUrl) -> licenseUrl
-      licenseUrl == null && normalizedLicense in setOf("cc by", "cc by sa") ->
-        if (normalizedLicense == "cc by") "https://creativecommons.org/licenses/by/4.0/"
-        else "https://creativecommons.org/licenses/by-sa/4.0/"
+      licenseUrl == null && normalizedLicense.contains("cc by sa") ->
+        "https://creativecommons.org/licenses/by-sa/4.0/"
+      licenseUrl == null && normalizedLicense.contains("cc by") ->
+        "https://creativecommons.org/licenses/by/4.0/"
       licenseUrl == null && normalizedLicense.contains("open music license") ->
         "https://audius.org/open-music-license.pdf"
       else -> return null

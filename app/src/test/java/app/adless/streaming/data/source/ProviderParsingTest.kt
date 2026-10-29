@@ -88,14 +88,32 @@ class ProviderParsingTest {
         """
         )
       )
+    val creativeCommons =
+      parseAudiusTrack(
+        JSONObject(
+          """
+            {"id":"cc-by-sa","title":"Open license","license":"Attribution-ShareAlike CC BY-SA 4.0"}
+        """
+        )
+      )
+    val nonCommercial =
+      parseAudiusTrack(
+        JSONObject(
+          """
+            {"id":"cc-by-nc-nd","title":"Restricted terms","license":"Attribution-NonCommercial-NoDerivs CC BY-NC-ND"}
+        """
+        )
+      )
 
     assertNotNull(allowed)
     assertEquals("https://audius.co/a-creator/open-sky", allowed?.sourcePageUrl)
     assertEquals("https://audius.org/open-music-license.pdf", allowed?.licenseUrl)
+    assertEquals("https://creativecommons.org/licenses/by-sa/4.0/", creativeCommons?.licenseUrl)
     assertNull(restricted)
     assertNull(reserved)
     assertNull(gated)
     assertNull(unsupported)
+    assertNull(nonCommercial)
   }
 
   @Test
